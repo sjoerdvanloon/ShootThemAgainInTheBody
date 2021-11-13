@@ -22,8 +22,13 @@ public abstract class LivingEntity : MonoBehaviour, IDamagable
 
     public void TakeHit(float damage, RaycastHit hit)
     {
+        TakeDamage(damage);
+    }
+
+    public void TakeDamage(float damage)
+    {
         _health -= damage;
-        if (_health <= 0  && !_dead)
+        if (_health <= 0 && !_dead)
         {
             Die();
         }
