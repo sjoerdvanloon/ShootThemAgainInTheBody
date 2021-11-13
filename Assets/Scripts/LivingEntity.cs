@@ -12,6 +12,8 @@ public abstract class LivingEntity : MonoBehaviour, IDamagable
     protected float _maxHealth;
     protected bool _dead;
 
+    public event Action OnDeath;
+
     protected virtual void Start()
     {
         _health = StartingHealth;
@@ -30,6 +32,9 @@ public abstract class LivingEntity : MonoBehaviour, IDamagable
     private void Die()
     {
         _dead = true;
+
+        OnDeath?.Invoke();
+
         GameObject.Destroy(gameObject);
     }
 }
