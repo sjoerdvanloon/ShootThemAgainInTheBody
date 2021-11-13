@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(GunController))]
-public class Player : MonoBehaviour
+public class Player : LivingEntity
 {
 
     public float _moveSpeed = 5;
@@ -12,8 +12,9 @@ public class Player : MonoBehaviour
     GunController _gunController;
     Camera _viewCamera;
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         _controller = GetComponent<PlayerController>();
         _gunController = GetComponent<GunController>();
 
@@ -33,15 +34,15 @@ public class Player : MonoBehaviour
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
         float rayDistance;
 
-        if(groundPlane.Raycast(ray, out rayDistance))
+        if (groundPlane.Raycast(ray, out rayDistance))
         {
             Vector3 point = ray.GetPoint(rayDistance);
-           Debug.DrawLine(ray.origin, point, Color.red);
+            Debug.DrawLine(ray.origin, point, Color.red);
             _controller.LookAt(point);
         }
 
         // Weapon input
-        if(Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
             _gunController.Shoot();
         }
