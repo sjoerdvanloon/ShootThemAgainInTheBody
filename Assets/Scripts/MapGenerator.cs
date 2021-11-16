@@ -19,7 +19,9 @@ public class MapGenerator : MonoBehaviour
     const string HOLDER_NAME = "Generated Map";
 
     List<Coordinate> _allTileCoordinates;
-    Queue<Coordinate> _shuffledCoordinates;
+    Queue<Coordinate> _shuffledTileCoordinates;
+    Queue<Coordinate> _shuffledOpenTileCoordinates;
+    Transform[,] _tileMap;
 
     Map CurrentMap { get => Maps[MapIndex]; }
    
@@ -50,6 +52,9 @@ public class MapGenerator : MonoBehaviour
 
     public void GeneratorMap()
     {
+        // Set tilemap
+        _tileMap = new Transform[CurrentMap.MapSize.x, CurrentMap.MapSize.y];
+
 
         // Set box collider on ground
         GetComponent<BoxCollider>().size = new Vector3(CurrentMap.MapSize.x * TileSize, .05f, CurrentMap.MapSize.y * TileSize);
@@ -65,7 +70,7 @@ public class MapGenerator : MonoBehaviour
                 _allTileCoordinates.Add(new Coordinate(x, y));
             }
         }
-        _shuffledCoordinates = new Queue<Coordinate>(Utility.Shuffle(_allTileCoordinates.ToArray(), CurrentMap.Seed));
+        _shuffledTileCoordinates = new Queue<Coordinate>(Utility.Shuffle(_allTileCoordinates.ToArray(), CurrentMap.Seed));
 
 
         // Create tiles
@@ -73,6 +78,8 @@ public class MapGenerator : MonoBehaviour
 
         // Create obstacles
         CreateObstacles(mapHolder);
+
+
 
         // Creating the masks
         CreateFloorMasks(mapHolder);
@@ -106,6 +113,8 @@ public class MapGenerator : MonoBehaviour
                 newTile.localScale = Vector3.one * (1 - OutlinePercent) * TileSize;
 
                 newTile.parent = mapHolder; // Group
+
+                _tileMap[x, y] = newTile;
             }
         }
     }
@@ -116,6 +125,8 @@ public class MapGenerator : MonoBehaviour
         bool[,] obstacleMap = new bool[CurrentMap.MapSize.x, CurrentMap.MapSize.y];
         int obstacleCount = (int)(CurrentMap.MapSize.x * CurrentMap.MapSize.y * CurrentMap.ObstaclePercent); // Mapsize times obstacles percent
         var currentObstacleCount = 0;
+        var  allOpenCoordinates = new List<Coordinate>(_allTileCoordinates);
+
         var randList = new List<float>();
         for (int i = 0; i < obstacleCount; i++)
         {
@@ -146,6 +157,9 @@ public class MapGenerator : MonoBehaviour
                 float colorPercentage = randomCoordinate.y / (float)CurrentMap.MapSize.y; // has to be cast, else no float will be returned
                 material.color = Color.Lerp(CurrentMap.ForegroundColor,CurrentMap.BackgroundColor, colorPercentage);
                 renderer.sharedMaterial = material;
+
+                // Remove from open coords
+                allOpenCoordinates.Remove(randomCoordinate);
             }
             else
             {
@@ -155,7 +169,10 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-       // print(string.Join(", ", randList));
+        _shuffledOpenTileCoordinates = new Queue<Coordinate>(Utility.Shuffle(allOpenCoordinates.ToArray(), CurrentMap.Seed));
+
+
+        // print(string.Join(", ", randList));
     }
 
     private void CreateFloorMasks(Transform mapHolder)
@@ -232,10 +249,28 @@ public class MapGenerator : MonoBehaviour
 
     public Coordinate GetRandomCoordinate()
     {
-        var randomCoordinate = _shuffledCoordinates.Dequeue();
-        _shuffledCoordinates.Enqueue(randomCoordinate);
+        var randomCoordinate = _shuffledTileCoordinates.Dequeue();
+        _shuffledTileCoordinates.Enqueue(randomCoordinate);
 
         return randomCoordinate;
+    }
+
+    public Transform GetTileFromPosition(Vector3 position)
+    {
+        int x = Mathf.RoundToInt( position.x / TileSize + (CurrentMap.MapSize.x - 1) / 2f);
+        int y = Mathf.RoundToInt( position.z / TileSize + (CurrentMap.MapSize.y - 1) / 2f);
+
+        x = Mathf.Clamp(x, 0, _tileMap.GetLength(0)-1);   
+        y = Mathf.Clamp(y, 0, _tileMap.GetLength(1)-1);   
+        return _tileMap[x, y];
+    }
+
+    public Transform GetRandomOpenTile()
+    {
+        var randomCoordinate = _shuffledOpenTileCoordinates.Dequeue();
+        _shuffledOpenTileCoordinates.Enqueue(randomCoordinate);
+
+        return _tileMap[randomCoordinate.x, randomCoordinate.y];
     }
 
     [System.Serializable]

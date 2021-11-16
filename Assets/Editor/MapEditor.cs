@@ -11,7 +11,8 @@ public class MapEditor : Editor
     {
         var updated = DrawDefaultInspector();
 
-            MapGenerator mapGenerator = target as MapGenerator;
+        MapGenerator mapGenerator = target as MapGenerator;
+
         if (updated)
         {
             mapGenerator.GeneratorMap();
