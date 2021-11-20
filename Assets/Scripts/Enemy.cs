@@ -8,6 +8,7 @@ public class Enemy : LivingEntity
 {
 
     public enum State { Idle, Chasing, Attacking };
+    public GameObject DeathEffect;
 
     NavMeshAgent _pathFinder;
     Transform _target;
@@ -22,6 +23,7 @@ public class Enemy : LivingEntity
     LivingEntity _targetEntity;
     bool _hasTarget;
     float _damage = 1f;
+
 
 
     protected override void Start()
@@ -45,6 +47,18 @@ public class Enemy : LivingEntity
             _targetCollisionRadius = _target.GetComponent<CapsuleCollider>().radius;
             StartCoroutine(UpdatePath());
         }
+
+    }
+
+
+    public override void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
+    {
+        if(damage> _health)
+        {
+            Instantiate(DeathEffect, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection));
+        //https://youtu.be/PAKYDX9gPNQ?t=677        }
+        base.TakeHit(damage, hitPoint, hitDirection);
+
 
     }
 

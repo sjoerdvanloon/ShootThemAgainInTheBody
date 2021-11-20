@@ -20,12 +20,12 @@ public abstract class LivingEntity : MonoBehaviour, IDamagable
     }
 
 
-    public void TakeHit(float damage, RaycastHit hit)
+    public  virtual void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
     {
         TakeDamage(damage);
     }
 
-    public void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage)
     {
         _health -= damage;
         if (_health <= 0 && !_dead)
