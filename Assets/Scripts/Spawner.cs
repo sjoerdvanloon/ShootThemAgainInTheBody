@@ -97,6 +97,11 @@ public class Spawner : MonoBehaviour
         //yield return null;
     }
 
+    private void ResetPlayerPosition()
+    {
+        _playerTransform.position = _mapGenerator.GetTileFromPosition(Vector3.zero).position + Vector3.up * 3;
+    }
+
     private void OnPlayerDeath()
     {
         _isDisabled = true;
@@ -131,6 +136,7 @@ public class Spawner : MonoBehaviour
             {
                 OnNewWave(_currentWaveNumber);
             }
+            ResetPlayerPosition();
         }
     }
 

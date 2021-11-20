@@ -34,7 +34,8 @@ public abstract class LivingEntity : MonoBehaviour, IDamagable
         }
     }
 
-    private void Die()
+    [ContextMenu("SelfDestruct")]
+    protected void Die()
     {
         _dead = true;
 
