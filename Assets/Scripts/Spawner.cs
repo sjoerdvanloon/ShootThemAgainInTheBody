@@ -28,12 +28,15 @@ public class Spawner : MonoBehaviour
     float _campThresholdDistance = 1.5f;
     Vector3 _campPositionOld;
     bool _isCamping;
+    private bool _isDisabled;
 
+    public  System.Action<int> OnNewWave; 
 
     private void Start()
     {
         // Get player
         _playerEntity = FindObjectOfType<Player>();
+        _playerEntity.OnDeath += () => OnPlayerDeath();
 
         // Camping
         _nextCampingCheckTime = _timeBetweenCampingChecks + Time.time;
@@ -48,6 +51,9 @@ public class Spawner : MonoBehaviour
 
     void Update()
     {
+        if (_isDisabled)
+            return;
+
         if (Time.time> _nextCampingCheckTime)
         {
             _nextCampingCheckTime = Time.time + _timeBetweenCampingChecks;
@@ -91,6 +97,12 @@ public class Spawner : MonoBehaviour
         //yield return null;
     }
 
+    private void OnPlayerDeath()
+    {
+        _isDisabled = true;
+    }
+
+
     private void OnEnemyDeath()
     {
         //print("Enemy died");
@@ -114,6 +126,11 @@ public class Spawner : MonoBehaviour
             _currentWave = Waves[_currentWaveNumber - 1];
             _enemiesRemainingToSpawn = _currentWave.EnemyCount;
             _enemiesRemainingAlive = _enemiesRemainingToSpawn;
+
+            if (OnNewWave != null)
+            {
+                OnNewWave(_currentWaveNumber);
+            }
         }
     }
 
