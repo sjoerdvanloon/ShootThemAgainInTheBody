@@ -25,29 +25,55 @@ public class Enemy : LivingEntity
     float _damage = 1f;
 
 
+     void Awake()
+    {
+        _pathFinder = GetComponent<NavMeshAgent>();
+        _skinMaterial = GetComponent<Renderer>().material;
+
+        var player = GameObject.FindGameObjectWithTag("Player");
+        _hasTarget = (player != null);
+
+        if (_hasTarget)
+        {
+            _target = player.transform;
+            _targetEntity = player.GetComponent<LivingEntity>();
+            //_targetEntity.OnDeath += OnTargetDeath; // Sebastian put this in, start, not completely sure why, for now I will just follow along
+
+            _myCollisionRadius = GetComponent<CapsuleCollider>().radius;
+            _targetCollisionRadius = _target.GetComponent<CapsuleCollider>().radius;
+        }
+    }
+
+   
 
     protected override void Start()
     {
         base.Start();
-        _pathFinder = GetComponent<NavMeshAgent>();
-        _skinMaterial = GetComponent<Renderer>().material;
-        _originalColor = _skinMaterial.color;
 
-
-        var player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        //print($"{_hasTarget}");
+     
+        if (_hasTarget)
         {
             _currentState = State.Chasing;
-            _hasTarget = true;
-            _target = player.transform;
-            _targetEntity = player.GetComponent<LivingEntity>();
             _targetEntity.OnDeath += OnTargetDeath;
 
-            _myCollisionRadius = GetComponent<CapsuleCollider>().radius;
-            _targetCollisionRadius = _target.GetComponent<CapsuleCollider>().radius;
             StartCoroutine(UpdatePath());
         }
 
+    }
+
+    internal void SetCharacteristics(float moveSpeed, int hitsToKillPlayer, float health, Color skinColor)
+    {
+        _pathFinder.speed = moveSpeed;
+
+        if (_hasTarget)
+        {
+            _damage = Mathf.Ceil(_targetEntity.StartingHealth / hitsToKillPlayer);
+        }
+
+        StartingHealth = health;
+        _originalColor = skinColor;
+        _skinMaterial.color = skinColor;
     }
 
 
@@ -58,8 +84,7 @@ public class Enemy : LivingEntity
 
         var takingHitResultInDeath = (damage >= _health);
 
-        print($"Take hit {(takingHitResultInDeath ? "does" : "does not")} result in death");
-
+        //print($"Take hit {(takingHitResultInDeath ? "does" : "does not")} result in death");
 
         if (takingHitResultInDeath)
         {
@@ -71,7 +96,7 @@ public class Enemy : LivingEntity
             var startLifeTimeDeathEffect = DeathEffect.main.startLifetime.constantMax;
             Destroy(deathEffect, startLifeTimeDeathEffect);
         }
-        
+
         base.TakeHit(damage, hitPoint, hitDirection);
 
 
@@ -103,8 +128,13 @@ public class Enemy : LivingEntity
         }
     }
 
+   
+
     IEnumerator Attack()
     {
+        if (!_hasTarget)
+            yield return null;
+
         _currentState = State.Attacking;
         _pathFinder.enabled = false;
         // Leap
@@ -122,7 +152,7 @@ public class Enemy : LivingEntity
         {
             // Animate our launch
 
-            if (percent>= .5f && !hasAppliedDamage)
+            if (percent >= .5f && !hasAppliedDamage)
             {
                 hasAppliedDamage = true;
                 _targetEntity.TakeDamage(_damage);

@@ -8,6 +8,7 @@ public class MapGenerator : MonoBehaviour
     public Map[] Maps;
     public int MapIndex;
     public Transform navMeshFloor;
+    public Transform MapFloor;
     public Transform TilePrefab;
     public Transform ObstaclePrefab;
     public Transform NavMeshMaskPrefab;
@@ -64,7 +65,7 @@ public class MapGenerator : MonoBehaviour
 
 
         // Set box collider on ground
-        GetComponent<BoxCollider>().size = new Vector3(CurrentMap.MapSize.x * TileSize, .05f, CurrentMap.MapSize.y * TileSize);
+        //GetComponent<BoxCollider>().size = new Vector3(CurrentMap.MapSize.x * TileSize, .05f, CurrentMap.MapSize.y * TileSize); // Removed because of https://youtu.be/8fZIZMlC69s?t=506
 
         var mapHolder = RegenerateMapHolder();
 
@@ -92,6 +93,7 @@ public class MapGenerator : MonoBehaviour
         CreateFloorMasks(mapHolder);
 
         navMeshFloor.localScale = new Vector3(MaxMapSize.x, MaxMapSize.y) * 2;
+        MapFloor.localScale = new Vector3(CurrentMap.MapSize.x * TileSize, CurrentMap.MapSize.y * TileSize);
     }
 
     private Transform RegenerateMapHolder()

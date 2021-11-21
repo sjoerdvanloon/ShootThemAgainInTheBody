@@ -9,7 +9,13 @@ public class Spawner : MonoBehaviour
     {
         public int EnemyCount;
         public float TimeBetweenSpawns;
+        public float MoveSpeed;
+        public int hitsToKillPlayer; // Damage given
+        public float Health;
+        public Color SkinColor;
+        public bool Infinite;
     }
+    public bool DeveloperMode = false;
 
     public Wave[] Waves;
     public Enemy Enemy;
@@ -51,6 +57,20 @@ public class Spawner : MonoBehaviour
 
     void Update()
     {
+
+        if (DeveloperMode)
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                StopCoroutine(nameof(SpawnEnemy)); // only possible to stop coroutines with name
+                foreach (var enemy in FindObjectsOfType<Enemy>())
+                {
+                    GameObject.Destroy(enemy.gameObject);
+                }
+                NextWave();
+            }
+        }
+
         if (_isDisabled)
             return;
 
@@ -62,11 +82,12 @@ public class Spawner : MonoBehaviour
             _campPositionOld = _playerTransform.position;
         }
 
-        if (_enemiesRemainingToSpawn > 0 && Time.time > _nextSpawnTime)
+        var spawnMoreEnemies = (_enemiesRemainingToSpawn > 0 || _currentWave.Infinite);
+        if (spawnMoreEnemies  && Time.time > _nextSpawnTime)
         {
             _enemiesRemainingToSpawn--;
             _nextSpawnTime = Time.time + _currentWave.TimeBetweenSpawns;
-            StartCoroutine(SpawnEnemy());
+            StartCoroutine(nameof(SpawnEnemy));
         }
     }
 
@@ -91,8 +112,9 @@ public class Spawner : MonoBehaviour
         }
 
 
-        Enemy spawnedEnemy = Instantiate(Enemy,spawnTile.position + Vector3.up, Quaternion.identity) as Enemy;
+        var spawnedEnemy = Instantiate(Enemy,spawnTile.position + Vector3.up, Quaternion.identity) as Enemy;
         spawnedEnemy.OnDeath += OnEnemyDeath;
+        spawnedEnemy.SetCharacteristics(_currentWave.MoveSpeed, _currentWave.hitsToKillPlayer, _currentWave.Health, _currentWave.SkinColor);
 
         //yield return null;
     }
@@ -122,11 +144,12 @@ public class Spawner : MonoBehaviour
 
     void NextWave()
     {
-        _currentWaveNumber++;
-        print($"Wave {_currentWaveNumber}");
 
-        if (_currentWaveNumber-1 < Waves.Length)
+        if (_currentWaveNumber < Waves.Length)
         {
+            print($"Wave {_currentWaveNumber}");
+
+            _currentWaveNumber++;
 
             _currentWave = Waves[_currentWaveNumber - 1];
             _enemiesRemainingToSpawn = _currentWave.EnemyCount;
