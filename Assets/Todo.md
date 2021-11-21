@@ -1,0 +1,19 @@
+﻿- When switching level
+	- Remove particles from last killed enemy
+	- Reset camping 
+	- Die when falling of the map
+- Projectiles
+	- Despawn when hitting obstacle
+- Player
+	- Googly eyes
+	- Maybe even moving with the force
+	- View port to hide / dim rest of the level
+- Enemy
+	- View port to only attack player when seen
+	- Noise port to only attack player when heard in a radius
+	- Noise port to only follow other enemy when that one is moving to player
+	- Patroling / random walk
+	- Despawn when falling of the map
+- Camera
+	- Moving / rocking
+	- Moving with the player

@@ -8,7 +8,7 @@ public class Enemy : LivingEntity
 {
 
     public enum State { Idle, Chasing, Attacking };
-    public GameObject DeathEffect;
+    public ParticleSystem DeathEffect;
 
     NavMeshAgent _pathFinder;
     Transform _target;
@@ -53,10 +53,25 @@ public class Enemy : LivingEntity
 
     public override void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
     {
-        if(damage> _health)
+        //print($"Damage: {damage}");
+        //print($"Health: {_health}");
+
+        var takingHitResultInDeath = (damage >= _health);
+
+        print($"Take hit {(takingHitResultInDeath ? "does" : "does not")} result in death");
+
+
+        if (takingHitResultInDeath)
         {
-            Instantiate(DeathEffect, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection));
-        //https://youtu.be/PAKYDX9gPNQ?t=677        }
+            //https://youtu.be/PAKYDX9gPNQ?t=677        }
+            var deathEffect = Instantiate(DeathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection));
+            //var particleSystem = deathEffect.GetComponent<ParticleSystem>();
+            ////print($"Start life time death effect: {startLifeTimeDeathEffect}"); // https://youtu.be/PAKYDX9gPNQ?t=758 other way, Sebastian way means that we dont have to get the compontent each time
+
+            var startLifeTimeDeathEffect = DeathEffect.main.startLifetime.constantMax;
+            Destroy(deathEffect, startLifeTimeDeathEffect);
+        }
+        
         base.TakeHit(damage, hitPoint, hitDirection);
 
 
