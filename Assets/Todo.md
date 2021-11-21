@@ -1,5 +1,5 @@
 ﻿- Bugs
-	- In the second level, sometimes the (last?) spawn red tile stays red. After spawinging and after every enemy is dead. 
+	- [SOLVED] In the second level, sometimes the (last?) spawn red tile stays red. After spawinging and after every enemy is dead.
 		- Maybe because player was standing on it / was dropped on it during the start.
 
 - When switching level
@@ -7,7 +7,7 @@
 	- Reset camping 
 	- Die when falling of the map
 - Projectiles
-	- Despawn when hitting obstacle
+	- [SOLVED] Despawn when hitting obstacle 
 - Player
 	- Googly eyes
 	- Maybe even moving with the force

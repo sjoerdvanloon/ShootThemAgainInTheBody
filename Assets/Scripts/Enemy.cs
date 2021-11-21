@@ -90,6 +90,8 @@ public class Enemy : LivingEntity
         {
             //https://youtu.be/PAKYDX9gPNQ?t=677        }
             var deathEffect = Instantiate(DeathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection));
+          //  DeathEffect.main.startColor = _originalColor;
+
             //var particleSystem = deathEffect.GetComponent<ParticleSystem>();
             ////print($"Start life time death effect: {startLifeTimeDeathEffect}"); // https://youtu.be/PAKYDX9gPNQ?t=758 other way, Sebastian way means that we dont have to get the compontent each time
 

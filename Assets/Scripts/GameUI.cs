@@ -19,6 +19,7 @@ public class GameUI : MonoBehaviour
 
     void OnGameOver()
     {
+        Cursor.visible = true; // Tip from TheCoolSquare
         StartCoroutine(Fade(Color.clear, Color.black, 1));
         GameOverUI.SetActive(true);
 

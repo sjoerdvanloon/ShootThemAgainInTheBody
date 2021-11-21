@@ -116,7 +116,10 @@ public class Spawner : MonoBehaviour
         spawnedEnemy.OnDeath += OnEnemyDeath;
         spawnedEnemy.SetCharacteristics(_currentWave.MoveSpeed, _currentWave.hitsToKillPlayer, _currentWave.Health, _currentWave.SkinColor);
 
-        //yield return null;
+        if (tileMaterial.color != initialColor)
+        {
+            tileMaterial.color = initialColor;
+        }
     }
 
     private void ResetPlayerPosition()

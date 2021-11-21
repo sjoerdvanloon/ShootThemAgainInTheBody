@@ -8,6 +8,9 @@ public class GunController : MonoBehaviour
     public Transform WeaponHold;
     public Gun StartingGun;
 
+    public float GunHeight { get => WeaponHold.position.y; }
+
+
     void Start()
     {
         if (StartingGun != null)
@@ -35,6 +38,7 @@ public class GunController : MonoBehaviour
         _equippedGun?.OnTriggerRelease();
       
     }
+
 
 
 }

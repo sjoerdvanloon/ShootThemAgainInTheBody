@@ -123,6 +123,12 @@ public class MapGenerator : MonoBehaviour
 
                 newTile.parent = mapHolder; // Group
 
+                // DriitzzCabel
+                Renderer newTileRenderer = newTile.GetComponent<Renderer>();
+                Material newTileMaterial = new Material(newTileRenderer.sharedMaterial);
+                newTileMaterial.color = CurrentMap.FloorColor;
+                newTileRenderer.sharedMaterial = newTileMaterial;
+
                 _tileMap[x, y] = newTile;
             }
         }
@@ -328,6 +334,7 @@ public class MapGenerator : MonoBehaviour
         public float maxObstacleHeight;
         public Color ForegroundColor;
         public Color BackgroundColor;
+        public Color FloorColor;  // DriitzzCabal https://www.youtube.com/watch?v=9bYy1uqHY0Q
         public Coordinate MapCentre { get { return new Coordinate(MapSize.x / 2, MapSize.y / 2); } }
     }
 }
