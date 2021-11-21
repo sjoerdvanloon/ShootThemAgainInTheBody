@@ -52,6 +52,12 @@ public class Projectile : MonoBehaviour
         {
             OnHitObject(hit.collider, hit.point);
         }
+
+        // Oscar had an idea for hitting other suff https://www.youtube.com/watch?v=yfSN6W98r4I
+        //if (Physics.Raycast(ray, out hit, moveDistance + skinWidth, collisionMask + floorCollision + obstacleCollision, QueryTriggerInteraction.Collide))
+        //{
+        //    onHitObject(hit.collider, hit.point);
+        //}
     }
 
     void OnHitObject(Collider collider, Vector3 hitPoint)

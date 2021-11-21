@@ -97,7 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CollisionMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 320
   TrailColor: {r: 1, g: 0.96265996, b: 0, a: 1}
 --- !u!1 &7866756302651964056
 GameObject:
