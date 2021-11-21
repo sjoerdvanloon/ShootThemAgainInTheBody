@@ -6,6 +6,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public LayerMask CollisionMask;
+    public Color TrailColor;
 
     float _speed = 10;
     float _damage = 1;
@@ -25,6 +26,10 @@ public class Projectile : MonoBehaviour
             OnHitObject(initialCollisions[0], transform.position);
 
         }
+
+        GetComponentInChildren<TrailRenderer>().startColor = TrailColor;
+
+       // GetComponent<TrailRenderer>().material.SetColor("_Color", TrailColor); // This only works when you add it as a component under the game object it self
     }
 
     // Update is called once per frame
