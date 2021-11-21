@@ -1,4 +1,8 @@
-﻿- When switching level
+﻿- Bugs
+	- In the second level, sometimes the (last?) spawn red tile stays red. After spawinging and after every enemy is dead. 
+		- Maybe because player was standing on it / was dropped on it during the start.
+
+- When switching level
 	- Remove particles from last killed enemy
 	- Reset camping 
 	- Die when falling of the map
@@ -8,6 +12,8 @@
 	- Googly eyes
 	- Maybe even moving with the force
 	- View port to hide / dim rest of the level
+- Spawner
+	- Do not spawn in player
 - Enemy
 	- View port to only attack player when seen
 	- Noise port to only attack player when heard in a radius
