@@ -17,6 +17,9 @@ public class GunController : MonoBehaviour
             EquipGun(StartingGun);
     }
     Gun _equippedGun;
+
+    public void Aim(Vector3 aimPoint) => _equippedGun?.Aim(aimPoint);
+
     public void EquipGun(Gun gunToEquip)
     {
         if (_equippedGun != null)

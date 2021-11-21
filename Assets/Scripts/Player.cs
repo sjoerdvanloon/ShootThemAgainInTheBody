@@ -9,6 +9,7 @@ public class Player : LivingEntity
 
     public float MoveSpeed = 5;
     public Crosshairs Crosshairs;
+    public float AimThresold = 4f;
 
     PlayerController _controller;
     GunController _gunController;
@@ -43,6 +44,13 @@ public class Player : LivingEntity
             _controller.LookAt(point);
             Crosshairs.transform.position = point;
             Crosshairs.DetectTargets(ray);
+
+            var cursorFromPlayer = ( new Vector2(point.x, point.z) - new Vector2(transform.position.x, transform.position.y)).magnitude;
+            if (cursorFromPlayer > AimThresold)
+            {
+                _gunController.Aim(point);
+            }
+
         }
 
         // Weapon input
