@@ -17,13 +17,19 @@ public class Gun : MonoBehaviour
     public float MuzzleVelocity = 100;
     public int burstCount;
     public int projectilesPerMagazine;
-   
+
     [Header("Effects")]
+    public bool ShellsEnabled = true;
     public Transform Shell;
     public Transform ShellEjector;
+    public bool MuzzleFlashedEnabled = true;
+
+    [Header("Kick")]
+    public bool KickEnabled = true;
+    public Vector2 KickMinMax = new Vector2(.05f, .2f);
 
     [Header("Recoil")]
-    public Vector2 KickMinMax = new Vector2(.05f, .2f);
+    public bool RecoilEnabled = true;
     public Vector2 RecoilAngleMinMax = new Vector2(3,5);
     public float RecoilMovementSettleTime = .1f;
     public float RecoilRotationSettleTime = .1f;
@@ -53,7 +59,7 @@ public class Gun : MonoBehaviour
         // Animate recoil
         transform.localPosition = Vector3.SmoothDamp(transform.localPosition, Vector3.zero, ref _recoilSmoothDownVelocity, RecoilMovementSettleTime);
        _recoilAngle = Mathf.SmoothDamp(_recoilAngle, 0, ref _recoilRotationSmoothDampVelocity, RecoilRotationSettleTime);
-        transform.localEulerAngles = transform.localEulerAngles + Vector3.left * _recoilAngle;
+        transform.localEulerAngles =  Vector3.left * _recoilAngle;
     }
 
     public void Aim(Vector3 aimPoint)
@@ -94,13 +100,26 @@ public class Gun : MonoBehaviour
 
 
             }
-            Instantiate(Shell, ShellEjector.position, ShellEjector.rotation); // https://youtu.be/e1XO53GA7xM?t=421
-            _muzzleFlash.Activate();
+            if (ShellsEnabled)
+            {
+                Instantiate(Shell, ShellEjector.position, ShellEjector.rotation); // https://youtu.be/e1XO53GA7xM?t=421
+            }
+
+            if (MuzzleFlashedEnabled)
+            {
+                _muzzleFlash.Activate();
+            }
 
             // Recoil
-            transform.localPosition -= Vector3.forward * Random.Range(KickMinMax.x, KickMinMax.y);
-            _recoilAngle += Random.Range(RecoilAngleMinMax.x, RecoilAngleMinMax.y);
-            _recoilAngle = Mathf.Clamp(_recoilAngle, 0, 30);
+            if (KickEnabled)
+            {
+                transform.localPosition -= Vector3.forward * Random.Range(KickMinMax.x, KickMinMax.y);
+            }
+            if (RecoilEnabled)
+            {
+                _recoilAngle += Random.Range(RecoilAngleMinMax.x, RecoilAngleMinMax.y);
+                _recoilAngle = Mathf.Clamp(_recoilAngle, 0, 30);
+            }
 
         }
     }
