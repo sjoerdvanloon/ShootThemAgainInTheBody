@@ -90,9 +90,8 @@ public class Enemy : LivingEntity
         {
             //https://youtu.be/PAKYDX9gPNQ?t=677        }
             var deathEffect = Instantiate(DeathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection));
-          //  DeathEffect.main.startColor = _originalColor;
-
-            //var particleSystem = deathEffect.GetComponent<ParticleSystem>();
+            var deathEffectShader = deathEffect.GetComponent<ParticleSystemRenderer>();
+            deathEffectShader.material.color = _originalColor; 
             ////print($"Start life time death effect: {startLifeTimeDeathEffect}"); // https://youtu.be/PAKYDX9gPNQ?t=758 other way, Sebastian way means that we dont have to get the compontent each time
 
             var startLifeTimeDeathEffect = DeathEffect.main.startLifetime.constantMax;
@@ -161,7 +160,7 @@ public class Enemy : LivingEntity
             }
 
             percent += Time.deltaTime * attackSpeed;
-            float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;  // https://www.youtube.com/watch?v=njqRlH3Hj3Q&list=PLFt_AvWsXl0ctd4dgE1F8g3uec4zKNRV0&index=7
+            var interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;  // https://www.youtube.com/watch?v=njqRlH3Hj3Q&list=PLFt_AvWsXl0ctd4dgE1F8g3uec4zKNRV0&index=7
             transform.position = Vector3.Lerp(originalPosition, attackPosition, interpolation);
 
             yield return null;

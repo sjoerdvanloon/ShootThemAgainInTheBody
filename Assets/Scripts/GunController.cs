@@ -30,6 +30,8 @@ public class GunController : MonoBehaviour
         _equippedGun.transform.parent = WeaponHold;
     }
 
+    public void Reload() => _equippedGun?.Reload();
+
     public void OnTriggerHold()
     {
         _equippedGun?.OnTriggerHold();

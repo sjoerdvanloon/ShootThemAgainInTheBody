@@ -24,6 +24,8 @@ public class Gun : MonoBehaviour
     public Transform ShellEjector;
     public bool MuzzleFlashedEnabled = true;
 
+    MuzzleFlash _muzzleFlash;
+
     [Header("Kick")]
     public bool KickEnabled = true;
     public Vector2 KickMinMax = new Vector2(.05f, .2f);
@@ -34,24 +36,30 @@ public class Gun : MonoBehaviour
     public float RecoilMovementSettleTime = .1f;
     public float RecoilRotationSettleTime = .1f;
 
-    MuzzleFlash _muzzleFlash;
-    float _nextShotTime;
-
-    bool _triggerReleasedSinceLastShot;
-    int _shotsRemainingInBurst;
-
     Vector3 _recoilSmoothDownVelocity;
     float _recoilAngle;
     float _recoilRotationSmoothDampVelocity;
 
-    int _projectilesInMagazine;
+    [Header("Reloading")]
+    public float ReloadTime = 0.3f;
+    public float MaxReloadAngle = 30f;
+
+    float _reloadAngle;
+
+
+
+    float _nextShotTime;
+    bool _triggerReleasedSinceLastShot;
+    int _shotsRemainingInBurst;
+    int _projectilesRemainingInMagazine;
+    bool _isCurrentlyReloading;
 
     private void Start()
     {
         _muzzleFlash = GetComponent<MuzzleFlash>();
         _shotsRemainingInBurst = burstCount;
 
-        _projectilesInMagazine = projectilesPerMagazine; // Hier ben ik gebleven https://youtu.be/r8JTwe6dewU?t=861
+        _projectilesRemainingInMagazine = projectilesPerMagazine; // Hier ben ik gebleven https://youtu.be/r8JTwe6dewU?t=861
     }
 
     private void LateUpdate()
@@ -59,7 +67,13 @@ public class Gun : MonoBehaviour
         // Animate recoil
         transform.localPosition = Vector3.SmoothDamp(transform.localPosition, Vector3.zero, ref _recoilSmoothDownVelocity, RecoilMovementSettleTime);
        _recoilAngle = Mathf.SmoothDamp(_recoilAngle, 0, ref _recoilRotationSmoothDampVelocity, RecoilRotationSettleTime);
-        transform.localEulerAngles =  Vector3.left * _recoilAngle;
+        transform.localEulerAngles =  Vector3.left * (_recoilAngle + _reloadAngle); // Fix from comment + my own special sauce, which hopefully keeps working, because then I understand stuff :D
+
+        var autoReload = (!_isCurrentlyReloading && _projectilesRemainingInMagazine == 0);
+        if (autoReload)
+        {
+            Reload();
+        }
     }
 
     public void Aim(Vector3 aimPoint)
@@ -70,7 +84,10 @@ public class Gun : MonoBehaviour
 
     void Shoot()
     {
-        if (Time.time > _nextShotTime)
+        var barrelEmpty = Time.time > _nextShotTime;
+        var magazineEmpty =  _projectilesRemainingInMagazine == 0;
+    //    print($"Try to shoot and magazine is empty: {magazineEmpty} and barrel is empty: {barrelEmpty}");
+        if (!_isCurrentlyReloading && barrelEmpty && !magazineEmpty)
         {
             switch (FireMode)
             {
@@ -92,14 +109,23 @@ public class Gun : MonoBehaviour
                     throw new NotImplementedException();
             }
 
+           // print("Time for a bullit");
+
             _nextShotTime = Time.time + MsBetweenShots / 1000;
+            
             foreach (var spawner in ProjectileSpawners)
             {
+                if (_projectilesRemainingInMagazine == 0)
+                {
+                    break; // Empty mag, so stop
+                }
+                _projectilesRemainingInMagazine--;
                 Projectile newProjectile = Instantiate(Projectile, spawner.position, spawner.rotation) as Projectile;
                 newProjectile.SetSpeed(MuzzleVelocity);
-
-
             }
+
+            //print($"number of projectiles {_projectilesRemainingInMagazine}");
+
             if (ShellsEnabled)
             {
                 Instantiate(Shell, ShellEjector.position, ShellEjector.rotation); // https://youtu.be/e1XO53GA7xM?t=421
@@ -122,6 +148,46 @@ public class Gun : MonoBehaviour
             }
 
         }
+    }
+
+    public void Reload()
+    {
+        if (!_isCurrentlyReloading)
+        {
+            var magazinFull = (projectilesPerMagazine == _projectilesRemainingInMagazine);
+            if (!magazinFull)
+            {
+                print("Reload gun");
+                StartCoroutine(AnimateReload());
+            }
+        }
+    }
+
+    IEnumerator AnimateReload()
+    {
+        _isCurrentlyReloading = true;
+
+        yield return new WaitForSeconds(0.2f); // Delay
+
+        float reloadSpeed = 1 / ReloadTime;
+        float percent = 0;
+        Vector3 initialRotation = transform.localEulerAngles;
+
+        while(percent < 1)
+        {
+            percent += Time.deltaTime * reloadSpeed;
+
+            var interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;
+            float reloadAngle = Mathf.Lerp(0, MaxReloadAngle, interpolation);
+            _reloadAngle = reloadAngle;
+            //transform.localEulerAngles = initialRotation + Vector3.left * reloadAngle;
+           
+            yield return null; // Wait until next frame
+        }
+
+        _isCurrentlyReloading = false;
+
+        _projectilesRemainingInMagazine = projectilesPerMagazine; // reset magazinee
     }
 
     public void OnTriggerHold()

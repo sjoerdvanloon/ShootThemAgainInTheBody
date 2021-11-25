@@ -63,6 +63,10 @@ public class Player : LivingEntity
         {
             _gunController.OnTriggerRelease();
         }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            _gunController.Reload();
+        }
 
     }
 }

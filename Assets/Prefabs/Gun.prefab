@@ -289,13 +289,23 @@ MonoBehaviour:
   FireMode: 0
   ProjectileSpawners:
   - {fileID: 7233583119330739867}
-  - {fileID: 8678002116180825457}
   Projectile: {fileID: 5771909660026225770, guid: 07d0541d81e636b44ba4e521a1f60434, type: 3}
   MsBetweenShots: 100
   MuzzleVelocity: 35
-  burstCount: 1
+  burstCount: 3
+  projectilesPerMagazine: 12
+  ShellsEnabled: 1
   Shell: {fileID: 5497859108133592192, guid: 359f991dfbfe42447bb29f987a58033f, type: 3}
   ShellEjector: {fileID: 4767397101881585117}
+  MuzzleFlashedEnabled: 1
+  KickEnabled: 1
+  KickMinMax: {x: 0.05, y: 0.2}
+  RecoilEnabled: 1
+  RecoilAngleMinMax: {x: 3, y: 5}
+  RecoilMovementSettleTime: 0.1
+  RecoilRotationSettleTime: 0.1
+  ReloadTime: 0.3
+  MaxReloadAngle: 60
 --- !u!114 &1900434173725363783
 MonoBehaviour:
   m_ObjectHideFlags: 0
