@@ -1159,7 +1159,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponHold: {fileID: 1506532604}
-  StartingGun: {fileID: -1740872697027303944, guid: d3a36826d22fe474b90aa337d5c3fc68, type: 3}
+  AllGuns:
+  - {fileID: 3816304475652353769, guid: 4740e72c47d760b4b884393bb0729abc, type: 3}
+  - {fileID: 7996245407339464931, guid: 9b4efcb92700bca4f8a3de71efef1671, type: 3}
+  - {fileID: 1656144821061587945, guid: 77b1e01873bbbe349a49275fc5aaf923, type: 3}
+  - {fileID: 533415811085754020, guid: 437ebd1442fc94b4f9e9ad61997c7406, type: 3}
+  - {fileID: 5049888374735372424, guid: 2d6f367db0ecf76459bd00097094b2f6, type: 3}
 --- !u!1 &111312838
 GameObject:
   m_ObjectHideFlags: 0
@@ -9983,7 +9988,7 @@ MonoBehaviour:
     MoveSpeed: 2.2
     hitsToKillPlayer: 5
     Health: 1
-    SkinColor: {r: 0.34294844, g: 0.5754717, b: 0.323929, a: 0}
+    SkinColor: {r: 0.5764706, g: 0.3254902, b: 0.5456177, a: 0}
     Infinite: 0
   - EnemyCount: 60
     TimeBetweenSpawns: 0.65
@@ -18399,6 +18404,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FadePlane: {fileID: 2055156912}
   GameOverUI: {fileID: 895585784}
+  NewWaveBanner: {fileID: 0}
+  NewWaveTitle: {fileID: 0}
+  NewWaveEnemyCount: {fileID: 0}
 --- !u!114 &1643947995
 MonoBehaviour:
   m_ObjectHideFlags: 0

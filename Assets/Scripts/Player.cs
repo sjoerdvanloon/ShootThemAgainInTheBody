@@ -18,10 +18,24 @@ public class Player : LivingEntity
     protected override void Start()
     {
         base.Start();
+
+    }
+
+    void Awake()
+    {
         _controller = GetComponent<PlayerController>();
         _gunController = GetComponent<GunController>();
 
         _viewCamera = Camera.main;
+        var spawner = FindObjectOfType<Spawner>();
+        spawner.OnNewWave += OnNewWave;
+    }
+
+    void OnNewWave(int waveNumber)
+    {
+        _health = StartingHealth;
+        var gun = _gunController.AllGuns[waveNumber-1];
+        _gunController.EquipGun(gun);
     }
 
     // Update is called once per frame
@@ -45,7 +59,7 @@ public class Player : LivingEntity
             Crosshairs.transform.position = point;
             Crosshairs.DetectTargets(ray);
 
-            var cursorFromPlayer = ( new Vector2(point.x, point.z) - new Vector2(transform.position.x, transform.position.y)).magnitude;
+            var cursorFromPlayer = (new Vector2(point.x, point.z) - new Vector2(transform.position.x, transform.position.y)).magnitude;
             if (cursorFromPlayer > AimThresold)
             {
                 _gunController.Aim(point);
@@ -67,6 +81,19 @@ public class Player : LivingEntity
         {
             _gunController.Reload();
         }
+
+        if (Input.anyKeyDown)
+        {
+            if (int.TryParse(Input.inputString, out int numberPressed))
+            {
+                if (numberPressed <= _gunController.AllGuns.Length)
+                {
+                    var gun = _gunController.AllGuns[numberPressed - 1];
+                    _gunController.EquipGun(gun);
+                }
+            }
+        }
+
 
     }
 }

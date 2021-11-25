@@ -6,17 +6,18 @@ public class GunController : MonoBehaviour
 {
 
     public Transform WeaponHold;
-    public Gun StartingGun;
+    public Gun[] AllGuns;
 
     public float GunHeight { get => WeaponHold.position.y; }
+    Gun _equippedGun;
 
 
     void Start()
     {
-        if (StartingGun != null)
-            EquipGun(StartingGun);
+
     }
-    Gun _equippedGun;
+
+
 
     public void Aim(Vector3 aimPoint) => _equippedGun?.Aim(aimPoint);
 
