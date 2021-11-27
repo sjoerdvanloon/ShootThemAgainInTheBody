@@ -36,6 +36,11 @@ public class GameUI : MonoBehaviour
 
     void OnNewWave(int waveNumber)
     {
+        // ShowNewWaveBanner(waveNumber);
+    }
+
+    void ShowNewWaveBanner(int waveNumber)
+    {
         var wave = _spawner.Waves[waveNumber - 1];
         string[] numbers = new string[] { "One", "Two", "Three", "Four", "Five" };
         var newWaveText = $"- Wave {numbers[waveNumber - 1]} -";
