@@ -23,6 +23,8 @@ public class Gun : MonoBehaviour
     public Transform Shell;
     public Transform ShellEjector;
     public bool MuzzleFlashedEnabled = true;
+    public AudioClip ShootAudio;
+    public AudioClip ReloadAudio;
 
     MuzzleFlash _muzzleFlash;
 
@@ -147,6 +149,9 @@ public class Gun : MonoBehaviour
                 _recoilAngle = Mathf.Clamp(_recoilAngle, 0, 30);
             }
 
+            // Audio
+            AudioManager.Instance.PlaySound(ShootAudio, transform.position);
+
         }
     }
 
@@ -159,6 +164,8 @@ public class Gun : MonoBehaviour
             {
                 print("Reload gun");
                 StartCoroutine(AnimateReload());
+                AudioManager.Instance.PlaySound(ReloadAudio, transform.position);
+
             }
         }
     }

@@ -178,6 +178,8 @@ MonoBehaviour:
   Shell: {fileID: 5497859108133592192, guid: 359f991dfbfe42447bb29f987a58033f, type: 3}
   ShellEjector: {fileID: 7199797156181969069}
   MuzzleFlashedEnabled: 1
+  ShootAudio: {fileID: 8300000, guid: bbece1f36834f0a48a28f88e4835df2e, type: 3}
+  ReloadAudio: {fileID: 8300000, guid: ddf534f7c2429074cb107255e0e64bab, type: 3}
   KickEnabled: 1
   KickMinMax: {x: 0.05, y: 0.2}
   RecoilEnabled: 1
