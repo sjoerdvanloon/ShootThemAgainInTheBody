@@ -7473,7 +7473,7 @@ GameObject:
   - component: {fileID: 679812521}
   - component: {fileID: 679812520}
   - component: {fileID: 679812523}
-  - component: {fileID: 679812522}
+  - component: {fileID: 679812524}
   m_Layer: 0
   m_Name: Audio manager
   m_TagString: Untagged
@@ -7493,9 +7493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbaee6777cc570943b4c5e111576e4a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterVolumePercent: 1
-  sfxVolumePercent: 1
-  musicVolumePercent: 1
+  LogPlaySound: 1
 --- !u!4 &679812521
 Transform:
   m_ObjectHideFlags: 0
@@ -7511,21 +7509,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &679812522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 679812519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbaee6777cc570943b4c5e111576e4a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  masterVolumePercent: 1
-  sfxVolumePercent: 1
-  musicVolumePercent: 1
 --- !u!114 &679812523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7540,6 +7523,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainTheme: {fileID: 8300000, guid: a6ac67ea8eca0ce49b4266ef41631d14, type: 3}
   MenuTheme: {fileID: 8300000, guid: 30a367b80cf871840be07089dedd8e0e, type: 3}
+--- !u!114 &679812524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 679812519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 234ec5ca6a568714bb8b8dda07733196, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Groups:
+  - GroupId: Impact
+    AudioClips:
+    - {fileID: 8300000, guid: bf2ad955e47054043a04d696f7560f19, type: 3}
+    - {fileID: 8300000, guid: b79fab982416ab849aba6c43aa692c6a, type: 3}
+    - {fileID: 8300000, guid: ff40d7352234bcd488ae3e7c4740ff11, type: 3}
+  - GroupId: EnemyDeath
+    AudioClips:
+    - {fileID: 8300000, guid: a7aee7dac2a30dd4dbf794e078b98f5e, type: 3}
+    - {fileID: 8300000, guid: fb0d5b8c4024ff447b1926431c6f4b47, type: 3}
+  - GroupId: EnemyAttack
+    AudioClips:
+    - {fileID: 8300000, guid: 2ce87b54098b9144d9a6ce8135118121, type: 3}
+  - GroupId: LevelCompleted
+    AudioClips:
+    - {fileID: 8300000, guid: add9f8d8d39ee9e4ea16e998cf70cda0, type: 3}
+  - GroupId: PlayerDeath
+    AudioClips:
+    - {fileID: 8300000, guid: 184b45c228f24074481ffb274965a57a, type: 3}
 --- !u!21 &696304353
 Material:
   serializedVersion: 6
@@ -9797,7 +9811,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DeveloperMode: 1
   Waves:
-  - EnemyCount: 0
+  - EnemyCount: 5
     TimeBetweenSpawns: 0.7
     MoveSpeed: 2.2
     hitsToKillPlayer: 5

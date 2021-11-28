@@ -29,6 +29,8 @@ public class Player : LivingEntity
         _viewCamera = Camera.main;
         var spawner = FindObjectOfType<Spawner>();
         spawner.OnNewWave += OnNewWave;
+
+
     }
 
     void OnNewWave(int waveNumber)
@@ -36,6 +38,13 @@ public class Player : LivingEntity
         _health = StartingHealth;
         var gun = _gunController.AllGuns[waveNumber-1];
         _gunController.EquipGun(gun);
+    }
+
+    public override void Die()
+    {
+        AudioManager.Instance.PlaySound("PlayerDeath");
+        base.Die();
+
     }
 
     // Update is called once per frame
@@ -93,7 +102,5 @@ public class Player : LivingEntity
                 }
             }
         }
-
-
     }
 }

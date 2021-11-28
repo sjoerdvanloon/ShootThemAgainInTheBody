@@ -82,17 +82,26 @@ public class Enemy : LivingEntity
         //print($"Damage: {damage}");
         //print($"Health: {_health}");
 
+        // Hit!
+        AudioManager.Instance.PlaySound("impact", transform.position);
+
+        // Die?
         var takingHitResultInDeath = (damage >= _health);
 
         //print($"Take hit {(takingHitResultInDeath ? "does" : "does not")} result in death");
 
         if (takingHitResultInDeath)
         {
+            // AUdio
+            AudioManager.Instance.PlaySound("enemydeath", transform.position);
+
+            // Particle set
             //https://youtu.be/PAKYDX9gPNQ?t=677        }
             var deathEffect = Instantiate(DeathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection));
             var deathEffectShader = deathEffect.GetComponent<ParticleSystemRenderer>();
-            deathEffectShader.material.color = _originalColor; 
+            deathEffectShader.material.color = _originalColor;
             ////print($"Start life time death effect: {startLifeTimeDeathEffect}"); // https://youtu.be/PAKYDX9gPNQ?t=758 other way, Sebastian way means that we dont have to get the compontent each time
+
 
             var startLifeTimeDeathEffect = DeathEffect.main.startLifetime.constantMax;
             Destroy(deathEffect, startLifeTimeDeathEffect);
@@ -124,6 +133,8 @@ public class Enemy : LivingEntity
         if (sqrDstToTarget < Mathf.Pow(_attackDistanceThreshold + _myCollisionRadius + _targetCollisionRadius, 2))
         {
             _nextAttackTime = Time.time + _timeBetweenAttacks;
+            AudioManager.Instance.PlaySound("enemyattack", transform.position);
+
             StartCoroutine(Attack());
 
         }

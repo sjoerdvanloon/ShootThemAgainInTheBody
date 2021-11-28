@@ -34,7 +34,7 @@ public class Gun : MonoBehaviour
 
     [Header("Recoil")]
     public bool RecoilEnabled = true;
-    public Vector2 RecoilAngleMinMax = new Vector2(3,5);
+    public Vector2 RecoilAngleMinMax = new Vector2(3, 5);
     public float RecoilMovementSettleTime = .1f;
     public float RecoilRotationSettleTime = .1f;
 
@@ -45,6 +45,7 @@ public class Gun : MonoBehaviour
     [Header("Reloading")]
     public float ReloadTime = 0.3f;
     public float MaxReloadAngle = 30f;
+    public bool LogReload = false;
 
     float _reloadAngle;
 
@@ -68,8 +69,8 @@ public class Gun : MonoBehaviour
     {
         // Animate recoil
         transform.localPosition = Vector3.SmoothDamp(transform.localPosition, Vector3.zero, ref _recoilSmoothDownVelocity, RecoilMovementSettleTime);
-       _recoilAngle = Mathf.SmoothDamp(_recoilAngle, 0, ref _recoilRotationSmoothDampVelocity, RecoilRotationSettleTime);
-        transform.localEulerAngles =  Vector3.left * (_recoilAngle + _reloadAngle); // Fix from comment + my own special sauce, which hopefully keeps working, because then I understand stuff :D
+        _recoilAngle = Mathf.SmoothDamp(_recoilAngle, 0, ref _recoilRotationSmoothDampVelocity, RecoilRotationSettleTime);
+        transform.localEulerAngles = Vector3.left * (_recoilAngle + _reloadAngle); // Fix from comment + my own special sauce, which hopefully keeps working, because then I understand stuff :D
 
         var autoReload = (!_isCurrentlyReloading && _projectilesRemainingInMagazine == 0);
         if (autoReload)
@@ -87,8 +88,8 @@ public class Gun : MonoBehaviour
     void Shoot()
     {
         var barrelEmpty = Time.time > _nextShotTime;
-        var magazineEmpty =  _projectilesRemainingInMagazine == 0;
-    //    print($"Try to shoot and magazine is empty: {magazineEmpty} and barrel is empty: {barrelEmpty}");
+        var magazineEmpty = _projectilesRemainingInMagazine == 0;
+        //    print($"Try to shoot and magazine is empty: {magazineEmpty} and barrel is empty: {barrelEmpty}");
         if (!_isCurrentlyReloading && barrelEmpty && !magazineEmpty)
         {
             switch (FireMode)
@@ -111,10 +112,10 @@ public class Gun : MonoBehaviour
                     throw new NotImplementedException();
             }
 
-           // print("Time for a bullit");
+            // print("Time for a bullit");
 
             _nextShotTime = Time.time + MsBetweenShots / 1000;
-            
+
             foreach (var spawner in ProjectileSpawners)
             {
                 if (_projectilesRemainingInMagazine == 0)
@@ -162,12 +163,19 @@ public class Gun : MonoBehaviour
             var magazinFull = (projectilesPerMagazine == _projectilesRemainingInMagazine);
             if (!magazinFull)
             {
-                print("Reload gun");
+                printif(LogReload, "Reload gun");
+
                 StartCoroutine(AnimateReload());
                 AudioManager.Instance.PlaySound(ReloadAudio, transform.position);
-
             }
         }
+    }
+
+
+    private void printif(bool predicate, string message)
+    {
+        if (predicate == true)
+            print(message);
     }
 
     IEnumerator AnimateReload()
@@ -180,7 +188,7 @@ public class Gun : MonoBehaviour
         float percent = 0;
         Vector3 initialRotation = transform.localEulerAngles;
 
-        while(percent < 1)
+        while (percent < 1)
         {
             percent += Time.deltaTime * reloadSpeed;
 
@@ -188,7 +196,7 @@ public class Gun : MonoBehaviour
             float reloadAngle = Mathf.Lerp(0, MaxReloadAngle, interpolation);
             _reloadAngle = reloadAngle;
             //transform.localEulerAngles = initialRotation + Vector3.left * reloadAngle;
-           
+
             yield return null; // Wait until next frame
         }
 

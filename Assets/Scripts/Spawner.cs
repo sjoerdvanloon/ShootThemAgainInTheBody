@@ -147,7 +147,10 @@ public class Spawner : MonoBehaviour
 
     void NextWave()
     {
-
+        if (_currentWaveNumber > 0)
+        {
+            AudioManager.Instance.PlaySound("LevelCompleted");
+        }
         if (_currentWaveNumber < Waves.Length)
         {
             print($"Wave {_currentWaveNumber}");
