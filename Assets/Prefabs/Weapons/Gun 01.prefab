@@ -694,6 +694,7 @@ MonoBehaviour:
   RecoilRotationSettleTime: 0.2
   ReloadTime: 0.5
   MaxReloadAngle: 30
+  LogReload: 1
 --- !u!114 &5295850523094074710
 MonoBehaviour:
   m_ObjectHideFlags: 0

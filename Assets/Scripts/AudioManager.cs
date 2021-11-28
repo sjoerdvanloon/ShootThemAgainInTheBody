@@ -7,17 +7,20 @@ public class AudioManager : MonoBehaviour
     public enum Channel { Master, Sfx, Music }
     public static AudioManager Instance;
 
-    float masterVolumePercent = 1;
-    float sfxVolumePercent = 1;
-    float musicVolumePercent = 1;
+    public float masterVolumePercent { get; private set; } = 1;
+    public float sfxVolumePercent { get; private set; } = 1;
+    public float musicVolumePercent { get; private set; } = 1;
 
     public bool LogPlaySound = false;
 
     AudioSource sfx2dSource;
+    
     AudioSource[] MusicSources;
     int activeMusicSourceIndex = 0;
+
     Transform audioListener;
-    Transform player;
+    
+    Transform playerTransform;
     SoundLibrary soundLibrary;
 
 
@@ -43,7 +46,10 @@ public class AudioManager : MonoBehaviour
             sfx2dSource = newSfx2dSource.AddComponent<AudioSource>();
 
             audioListener = FindObjectOfType<AudioListener>().transform;
-            player = FindObjectOfType<Player>().transform;
+
+            var player = FindObjectOfType<Player>();
+            if (player != null)
+                playerTransform = player.transform;
 
             masterVolumePercent = PlayerPrefs.GetFloat("master vol", masterVolumePercent);
             sfxVolumePercent = PlayerPrefs.GetFloat("sfx vol", sfxVolumePercent);
@@ -58,9 +64,9 @@ public class AudioManager : MonoBehaviour
 
     void Update()
     {
-        if (player != null)
+        if (playerTransform != null)
         {
-            audioListener.position = player.position;
+            audioListener.position = playerTransform.position;
         }
     }
 
@@ -87,6 +93,8 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.SetFloat("master vol", masterVolumePercent);
         PlayerPrefs.SetFloat("sfx vol", sfxVolumePercent);
         PlayerPrefs.SetFloat("music vol", musicVolumePercent);
+        PlayerPrefs.Save();
+
     }
 
     public void PlayMusic(AudioClip clip, float fadeDuration = 2)
@@ -161,7 +169,7 @@ public class AudioManager : MonoBehaviour
         if (sound != null)
         {
             var volume = sfxVolumePercent * masterVolumePercent;
-           
+
             if (LogPlaySound)
                 print($"Play 2d sound {sound.name} at {volume * 100}%");
 
