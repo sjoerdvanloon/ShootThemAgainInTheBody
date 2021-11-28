@@ -16,6 +16,7 @@ public class GameUI : MonoBehaviour
     public Text NewWaveEnemyCount;
     public float NewWavePauzedelay = 1.5f;
     public float NewWaveSpeed = 3;
+    public float NewWaveStartDelay = 1f;
 
     Spawner _spawner;
 
@@ -36,7 +37,7 @@ public class GameUI : MonoBehaviour
 
     void OnNewWave(int waveNumber)
     {
-        // ShowNewWaveBanner(waveNumber);
+        ShowNewWaveBanner(waveNumber);
     }
 
     void ShowNewWaveBanner(int waveNumber)
@@ -56,7 +57,7 @@ public class GameUI : MonoBehaviour
     IEnumerator AnimateNewWaveBanner()
     {
 
-        //yield return new WaitForSeconds(NewWaveStartDelay); // Makes it wonky
+        yield return new WaitForSeconds(NewWaveStartDelay); // Makes it wonky
 
         float delayTime = NewWavePauzedelay;
         float speed = NewWaveSpeed;
@@ -78,7 +79,7 @@ public class GameUI : MonoBehaviour
                 }
             }
 
-            NewWaveBanner.anchoredPosition = Vector2.up * Mathf.Lerp(-600, -200, animatePercent);
+            NewWaveBanner.anchoredPosition = Vector2.up * Mathf.Lerp(-484, -200, animatePercent);
             //print(animatePercent);
             yield return null;
         }
