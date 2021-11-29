@@ -40,10 +40,18 @@ public class Player : LivingEntity
         _gunController.EquipGun(gun);
     }
 
-    public override void Die()
+    public override void Die(DamageType deathType)
     {
+        if (deathType == DamageType.Falling)
+        {
+            AudioManager.Instance.PlaySound("Fall");
+
+        }
+        else
+        {
         AudioManager.Instance.PlaySound("PlayerDeath");
-        base.Die();
+        }
+        base.Die(deathType);
 
     }
 
@@ -74,6 +82,12 @@ public class Player : LivingEntity
                 _gunController.Aim(point);
             }
 
+
+            if (transform.position.y < -10)
+            {
+                FallsToDeath();
+            }
+
         }
 
         // Weapon input
@@ -102,5 +116,10 @@ public class Player : LivingEntity
                 }
             }
         }
+    }
+
+    private void FallsToDeath()
+    {
+        TakeDamage(new Damage() { Amount = Health, Type = DamageType.Falling });
     }
 }

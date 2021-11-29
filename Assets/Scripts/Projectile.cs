@@ -63,7 +63,7 @@ public class Projectile : MonoBehaviour
     void OnHitObject(Collider collider, Vector3 hitPoint)
     {
         IDamagable damagable = collider.GetComponent<IDamagable>();
-        damagable?.TakeHit(_damage, hitPoint, transform.forward);
+        damagable?.TakeHit(new Damage() { Amount = _damage, Type = DamageType.Shot }, hitPoint, transform.forward);
 
         GameObject.Destroy(gameObject);
     }

@@ -42,7 +42,7 @@ public class Spawner : MonoBehaviour
     {
         // Get player
         _playerEntity = FindObjectOfType<Player>();
-        _playerEntity.OnDeath += () => OnPlayerDeath();
+        _playerEntity.OnDeath += (DamageType) => OnPlayerDeath();
 
         // Camping
         _nextCampingCheckTime = _timeBetweenCampingChecks + Time.time;
@@ -133,7 +133,7 @@ public class Spawner : MonoBehaviour
     }
 
 
-    private void OnEnemyDeath()
+    private void OnEnemyDeath(DamageType type)
     {
         //print("Enemy died");
         _enemiesRemainingAlive--;

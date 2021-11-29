@@ -7,12 +7,14 @@ using UnityEngine;
 
 public abstract class LivingEntity : MonoBehaviour, IDamagable
 {
+
     public float StartingHealth;
     protected float _health;
     protected float _maxHealth;
     protected bool _dead;
+    public float Health => _health;
 
-    public event Action OnDeath;
+    public event Action<DamageType> OnDeath;
 
     protected virtual void Start()
     {
@@ -20,26 +22,26 @@ public abstract class LivingEntity : MonoBehaviour, IDamagable
     }
 
 
-    public  virtual void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
+    public  virtual void TakeHit(Damage damage, Vector3 hitPoint, Vector3 hitDirection)
     {
         TakeDamage(damage);
     }
 
-    public virtual void TakeDamage(float damage)
+    public virtual void TakeDamage(Damage damage)
     {
-        _health -= damage;
+        _health -= damage.Amount;
         if (_health <= 0 && !_dead)
         {
-            Die();
+            Die(damage.Type);
         }
     }
 
     [ContextMenu("SelfDestruct")]
-    public virtual void Die()
+    public virtual void Die(DamageType deathType)
     {
         _dead = true;
 
-        OnDeath?.Invoke();
+        OnDeath?.Invoke(deathType);
 
         GameObject.Destroy(gameObject);
     }

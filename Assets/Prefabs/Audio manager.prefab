@@ -92,6 +92,12 @@ MonoBehaviour:
   - GroupId: PlayerDeath
     AudioClips:
     - {fileID: 8300000, guid: 184b45c228f24074481ffb274965a57a, type: 3}
+  - GroupId: Fall
+    AudioClips:
+    - {fileID: 8300000, guid: 699215d0021817546b66c236779e1db0, type: 3}
+    - {fileID: 8300000, guid: 0e7bae511d4d3714ca173c826c39c460, type: 3}
+    - {fileID: 8300000, guid: 699215d0021817546b66c236779e1db0, type: 3}
+    - {fileID: 8300000, guid: f91b63754c2729740b955dcfd227313c, type: 3}
 --- !u!1 &2390244762157622785
 GameObject:
   m_ObjectHideFlags: 0

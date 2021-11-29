@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class Enemy : LivingEntity
 
     public enum State { Idle, Chasing, Attacking };
     public ParticleSystem DeathEffect;
+    public static event Action OnDeathStatic;
 
     NavMeshAgent _pathFinder;
     Transform _target;
@@ -77,7 +79,7 @@ public class Enemy : LivingEntity
     }
 
 
-    public override void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
+    public override void TakeHit(Damage damage, Vector3 hitPoint, Vector3 hitDirection)
     {
         //print($"Damage: {damage}");
         //print($"Health: {_health}");
@@ -86,12 +88,14 @@ public class Enemy : LivingEntity
         AudioManager.Instance.PlaySound("impact", transform.position);
 
         // Die?
-        var takingHitResultInDeath = (damage >= _health);
+        var takingHitResultInDeath = (damage.Amount >= _health);
 
         //print($"Take hit {(takingHitResultInDeath ? "does" : "does not")} result in death");
 
         if (takingHitResultInDeath)
         {
+            if (OnDeathStatic != null)
+                OnDeathStatic();
             // AUdio
             AudioManager.Instance.PlaySound("enemydeath", transform.position);
 
@@ -112,7 +116,7 @@ public class Enemy : LivingEntity
 
     }
 
-    void OnTargetDeath()
+    void OnTargetDeath(DamageType type)
     {
         _hasTarget = false;
         _currentState = State.Idle;
@@ -167,7 +171,7 @@ public class Enemy : LivingEntity
             if (percent >= .5f && !hasAppliedDamage)
             {
                 hasAppliedDamage = true;
-                _targetEntity.TakeDamage(_damage);
+                _targetEntity.TakeDamage(new Damage() { Amount = _damage, Type = DamageType.Punched });
             }
 
             percent += Time.deltaTime * attackSpeed;

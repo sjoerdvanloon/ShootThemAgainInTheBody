@@ -9,7 +9,11 @@ public class GameUI : MonoBehaviour
 
     [Header("Game over")]
     public Image FadePlane;
+    public float FadeTime = 1f;
+    public Color FadeToColor = new Color(0, 0, 0, .95f);
     public GameObject GameOverUI;
+    public GameObject GameOverScoreUI;
+
     [Header("New wave banner")]
     public RectTransform NewWaveBanner;
     public Text NewWaveTitle;
@@ -17,20 +21,43 @@ public class GameUI : MonoBehaviour
     public float NewWavePauzedelay = 1.5f;
     public float NewWaveSpeed = 3;
     public float NewWaveStartDelay = 1f;
+    [Header("Score")]
+    public GameObject ScoreUI;
+    [Header("Health")]
+    public GameObject HealthUI;
+
+    private Text Score => ScoreUI.GetComponentInChildren<Text>();
+    private Text GameOverScore => GameOverScoreUI.GetComponentInChildren<Text>();
+    private RectTransform HealthBacking => HealthUI.GetComponentInChildren<RectTransform>();
+    private RectTransform HealthBar => HealthBacking.GetComponentInChildren<RectTransform>();
+
 
     Spawner _spawner;
+    Player _player;
 
     // Start is called before the first frame update
     void Start()
     {
-        var player = FindObjectOfType<Player>();
-        player.OnDeath += OnGameOver;
+        _player = FindObjectOfType<Player>();
+        _player.OnDeath += OnGameOver;
     }
 
     void Awake()
     {
         _spawner = FindObjectOfType<Spawner>();
         _spawner.OnNewWave += OnNewWave;
+
+
+    }
+    void Update()
+    {
+        Score.GetComponentInChildren<Text>().text = ScoreKeeper.Score.ToString("D6");
+        float healthPercent = 0;
+        if (_player != null)
+        {
+            healthPercent = _player.Health / _player.StartingHealth;
+        }
+        HealthBar.localScale = new Vector3(healthPercent, 0.66f, 0);
     }
 
 
@@ -86,10 +113,13 @@ public class GameUI : MonoBehaviour
 
     }
 
-    void OnGameOver()
+    void OnGameOver(DamageType type)
     {
         Cursor.visible = true; // Tip from TheCoolSquare
-        StartCoroutine(Fade(Color.clear, Color.black, 1));
+        StartCoroutine(Fade(Color.clear, FadeToColor, FadeTime));
+        GameOverScore.text = Score.text;
+        ScoreUI.SetActive(false);
+        HealthUI.SetActive(false);
         GameOverUI.SetActive(true);
 
     }
@@ -110,7 +140,11 @@ public class GameUI : MonoBehaviour
 
     public void StartNewGame()
     {
-        // Application.LoadLevel("Game"); // Obsolete
         SceneManager.LoadScene("Game");
+    }
+
+    public void GoToMainMenu()
+    {
+        SceneManager.LoadScene("Menu");
     }
 }
