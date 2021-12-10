@@ -83,12 +83,12 @@ public class Player : LivingEntity
             }
 
 
+
+        }
             if (transform.position.y < -10)
             {
                 FallsToDeath();
             }
-
-        }
 
         // Weapon input
         if (Input.GetMouseButton(0))

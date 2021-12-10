@@ -7,6 +7,7 @@ public class MusicManager : MonoBehaviour
 {
     public AudioClip MainTheme;
     public AudioClip MenuTheme;
+    public string Name;
 
     string currentSceneName;
 
