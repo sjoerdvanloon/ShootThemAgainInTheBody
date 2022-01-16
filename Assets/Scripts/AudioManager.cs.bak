@@ -2,10 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Version 1.0
-/// ShootThemAgainInTheBody version
-/// </summary>
 public class AudioManager : MonoBehaviour
 {
     public enum Channel { Master, Sfx, Music }

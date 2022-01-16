@@ -4,10 +4,6 @@ using UnityEngine;
 using System.Linq;
 using System;
 
-/// <summary>
-/// Version 1.0
-/// ShootThemAgainInTheBody version
-/// </summary>
 public class SoundLibrary : MonoBehaviour
 {
     public SoundGroup[] Groups;
